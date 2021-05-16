@@ -2,7 +2,8 @@ const express = require('express')
 const app = express()
 
 //  req => middleware => res
-
+//next is so important -> must have in middleware to direct to specific route
+// middleware locates in the very top of all method to make sure all method can access it
 const logger = (req, res, next) => {
   const method = req.method
   const url = req.url

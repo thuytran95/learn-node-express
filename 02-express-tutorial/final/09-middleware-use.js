@@ -3,6 +3,8 @@ const app = express()
 const logger = require('./logger')
 const authorize = require('./authorize')
 //  req => middleware => res
+
+// change the orders of array will have middleware will work differenty
 app.use([logger, authorize])
 // api/home/about/products
 app.get('/', (req, res) => {
