@@ -26,6 +26,8 @@ app.set('views', path.join(__dirname, 'resources/views'));
 route(app);
 
 // local host IP: 127.0.0.1 -> localhost
-app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`);
+app.listen(					port,
+
+	() => {
+   			 console.log(`Example app listening at http://localhost:${port}`);
 });

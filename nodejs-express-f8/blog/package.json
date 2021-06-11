@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "node-sass --watch src/resources/scss/ -o src/public/css/",
-    "start": "nodemon --inspect src/index.js"
+    "start": "nodemon --inspect src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "f8",
@@ -15,12 +15,23 @@
   ],
   "author": "thuytran",
   "license": "ISC",
+  "lint-staged": {
+    "src/**/*.{js,json,scss}": "prettier --single-quote --trailing-comma all --tab-width 4 --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "dependencies": {
     "express": "^4.17.1",
     "express-handlebars": "^5.3.2"
   },
   "devDependencies": {
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
     "morgan": "^1.10.0",
-    "node-sass": "^6.0.0"
+    "node-sass": "^6.0.0",
+    "prettier": "^2.3.1"
   }
 }
