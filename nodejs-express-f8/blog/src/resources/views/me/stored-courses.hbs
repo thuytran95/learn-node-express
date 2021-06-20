@@ -1,0 +1,135 @@
+<form
+	name='container-form'
+	class='mt-4'
+	method='POST'
+	action='/courses/handle-form-actions'
+>
+	<div>
+		<h3>Khóa học của tôi</h3>
+		<p>Thùng rác :{{this.deletedCount}} </p>
+		<a href='/me/trash/courses'>Khôi phục khóa học</a>
+		<div class='mt-4 d-flex align-items-center justify-content-between"'>
+			<div class='form-check'>
+				<input
+					class='form-check-input'
+					type='checkbox'
+					value=''
+					id='checkbox-all'
+				/>
+				<label class='form-check-label' for='checkbox-all'>
+					Chọn tất cả
+				</label>
+			</div>
+			<select
+				class='form-control form-control-sm w-25 mx-3'
+				name='action'
+				required
+			>
+				<option value=''>-- Chọn hành động --</option>
+				<option value='delete'>Xóa</option>
+			</select>
+			<button class='btn btn-success btn-sm btn-submit' disabled>Áp dụng</button>
+		</div>
+	</div>
+
+	<table class='table mt-4'>
+		<thead>
+			<tr>
+				<th scope='col' colspan='2'>STT</th>
+				<th scope='col'>Tên khóa học</th>
+				<th scope='col'>Trình độ</th>
+				<th scope='col'>Thời gian tạo</th>
+				<th></th>
+
+			</tr>
+		</thead>
+		<tbody>
+			{{#each courses}}
+				<tr>
+					<td>
+						<div class='form-check'>
+							<input
+								class='form-check-input'
+								type='checkbox'
+								name='courseIds[]'
+								value='{{this._id}}'
+							/>
+						</div>
+					</td>
+					<td scope='row'>{{sum @index 1}}</td>
+					<td>{{this.name}}</td>
+					<td>{{this.level}}</td>
+					<td>{{this.createdAt}}</td>
+					<td>
+						<a href='/courses/{{this._id}}/edit' class='btn btn-success'>Sửa</a>
+						<button
+							data-toggle='modal'
+							data-target='#modal'
+							data-id='{{this._id}}'
+							class='btn btn-danger'
+						>Xóa</button>
+					</td>
+				</tr>
+			{{else}}
+				<tr>
+					<td colspan='5' class='text-center'>Bạn chưa đăng khóa học nào.
+						<a href='/courses/create'>Đăng khóa học</a>
+					</td>
+				</tr>
+			{{/each}}
+
+		</tbody>
+	</table>
+</form>
+
+{{! Confirm delete course }}
+<div class='modal' id='modal' tabindex='-1' role='dialog'>
+	<div class='modal-dialog' role='document'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h5 class='modal-title'>Xóa khóa học?</h5>
+				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+			</div>
+			<div class='modal-body'>
+				<p>Bạn chắc chắn muốn xóa khóa học này?</p>
+			</div>
+			<div class='modal-footer'>
+				<button type='button' class='btn btn-danger' id='btn-delete'>Xóa bỏ</button>
+				<button
+					type='button'
+					class='btn btn-secondary'
+					data-dismiss='modal'
+				>Hủy</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{! Delete hidden form }}
+<form method='POST' name='delete-form'></form>
+<script>
+	document.addEventListener('DOMContentLoaded',function () { var courseId; var
+	deleteForm = document.forms['delete-form']; var btnDelete =
+	document.getElementById('btn-delete'); var courseItemCheckBox =
+	$('input[name="courseIds[]"]'); var btnSubmit = $('.btn-submit'); //var
+	containerForm = document.forms['container-form']; var containerForm =
+	$('form[name="container-form"]'); var checkBoxAll = $('#checkbox-all');
+	$('#modal').on('show.bs.modal',function (event) { var button =
+	$(event.relatedTarget); courseId = button.data('id'); }); btnDelete.onclick =
+	function () { deleteForm.action = `/courses/${ courseId }?_method=DELETE`;
+	deleteForm.submit(); }; //
+	{{! Checkbox all changed }}
+	checkBoxAll.change(function () { var isChecked = $(this).prop('checked');
+	courseItemCheckBox.prop('checked',isChecked); renderCheckAllSubmitBtn(); }); //
+	{{! course item checkbox changed }}
+	courseItemCheckBox.change(function () { var isCheckAll =
+	courseItemCheckBox.length === $('input[name="courseIds[]"]:checked').length;
+	checkBoxAll.prop('checked',isCheckAll); renderCheckAllSubmitBtn(); }); //
+	{{! render btn submit }}
+	function renderCheckAllSubmitBtn() { var checkedCount =
+	$('input[name="courseIds[]"]:checked').length; if (checkedCount) {
+	btnSubmit.attr('disabled', false); } else { btnSubmit.attr('disabled', true); }
+	} });
+</script>
